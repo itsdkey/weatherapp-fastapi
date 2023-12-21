@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    container_name: weather-app
+    env_file: .env
+    environment:
+      PYTHONBREAKPOINT: wdb.set_trace
+      WDB_SOCKET_SERVER: wdb
+      WDB_NO_BROWSER_AUTO_OPEN: 1
+    ports:
+      - '8000:8000'
+    volumes:
+      - '.:/app'
+
+  wdb:
+    image: 'kozea/wdb:3.3.0'
+    container_name: wdb
+    ports:
+      - '1984:1984'
