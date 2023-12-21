@@ -1,15 +1,33 @@
 # Weather app using FastAPI
 
 * [Intuition](#intuition)
+* [What I used](#what-i-used)
+* [What patterns I followed](#what-patterns-i-followed)
 * [Local development](#local-development-using-virtualenv)
     * [using virtualenv](#local-development-using-virtualenv)
     * [using docker compose](#local-development-using-docker-compose)
 * [Project conventions](#project-conventions)
 
 ## Intuition
-Just a fun project to code a simple weather app. However, I wanted to get familair with new technologies such as:
+Just a fun project to code a simple weather app. However, I wanted to get more familiar
+with new technologies such as:
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [InfluxDB](https://www.influxdata.com/)
+
+
+## What I used
+To learn something about the technologies (follow some conventions mentioned in their
+documentations) and also to follow best practices I used the following concepts:
+- Use [env vars](https://fastapi.tiangolo.com/advanced/settings/#environment-variables)
+for WeatherClient domain and API Key (so we can change and for security reasons),
+- [Use FastAPI's Settings Object](https://fastapi.tiangolo.com/advanced/settings/#create-the-settings-object)
+
+
+# What patterns I followed
+To keep following the best practices and to have my code more structured I decided to follow the patterns below:
+- A Client class for 3rd party integration - so the code responsible for requesting 3rd parties is separated from the rest
+- [Adapter design pattern](https://refactoring.guru/design-patterns/adapter) - so I can convert the 3rd party response
+the way I want it to be used by my app
 
 
 ## Local development using virtualenv

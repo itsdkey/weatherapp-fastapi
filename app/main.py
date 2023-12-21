@@ -16,8 +16,8 @@ def read_root() -> dict:
 @app.get("/weather")
 def read_weather(
     settings: Annotated[Settings, Depends(get_settings)],
-    city: str | None = None,
-    country_code: str | None = None,
+    city: str,
+    country_code: str,
 ) -> dict:
     response = {}
     if city and country_code:

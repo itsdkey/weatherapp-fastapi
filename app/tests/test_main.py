@@ -75,3 +75,73 @@ def test_weather_returns_weather_from_third_party(httpx_mock: HTTPXMock):
 
     assert response.status_code == 200
     assert response.json() == expected_response
+
+
+def test_weather_returns_error_when_country_code_missing():
+    expected_response = {
+        "detail": [
+            {
+                "input": None,
+                "loc": ["query", "country_code"],
+                "msg": "Field required",
+                "type": "missing",
+                "url": "https://errors.pydantic.dev/2.5/v/missing",
+            },
+        ],
+    }
+
+    response = client.get(
+        "/weather",
+        params={"city": "Białystok"},
+    )
+
+    assert response.status_code == 422
+    assert response.json() == expected_response
+
+
+def test_weather_returns_error_when_city_missing():
+    expected_response = {
+        "detail": [
+            {
+                "input": None,
+                "loc": ["query", "city"],
+                "msg": "Field required",
+                "type": "missing",
+                "url": "https://errors.pydantic.dev/2.5/v/missing",
+            }
+        ],
+    }
+
+    response = client.get(
+        "/weather",
+        params={"country_code": "PL"},
+    )
+
+    assert response.status_code == 422
+    assert response.json() == expected_response
+
+
+def test_weather_returns_error_when_both_params_missing():
+    expected_response = {
+        "detail": [
+            {
+                "input": None,
+                "loc": ["query", "city"],
+                "msg": "Field required",
+                "type": "missing",
+                "url": "https://errors.pydantic.dev/2.5/v/missing",
+            },
+            {
+                "input": None,
+                "loc": ["query", "country_code"],
+                "msg": "Field required",
+                "type": "missing",
+                "url": "https://errors.pydantic.dev/2.5/v/missing",
+            },
+        ],
+    }
+
+    response = client.get("/weather")
+
+    assert response.status_code == 422
+    assert response.json() == expected_response
