@@ -2,6 +2,7 @@ services:
   app:
     build: .
     container_name: weather-app
+    command: ["local_entrypoint.sh"]
     env_file: .env
     environment:
       PYTHONBREAKPOINT: wdb.set_trace
@@ -17,7 +18,7 @@ services:
   influxdb:
     container_name: db
     image: influxdb:2.6-alpine
-    env_file: .env
+    env_file: .influxv2.env
     ports:
       - "8086:8086"
     volumes:
@@ -26,7 +27,7 @@ services:
 
   telegraf:
     image: telegraf:1.25-alpine
-    env_file: .env
+    env_file: .influxv2.env
     depends_on:
       - influxdb
     volumes:

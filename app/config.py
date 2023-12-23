@@ -6,9 +6,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     OPENWEATHER_API_KEY: str
     OPENWEATHER_DOMAIN: str
-    INFLUXDB_INIT_ADMIN_TOKEN: str
-    INFLUXDB_INIT_ORG: str
-    INFLUXDB_INIT_BUCKET: str
+    INFLUXDB_TOKEN: str
+    INFLUXDB_ORG: str
+    INFLUXDB_BUCKET: str
     INFLUXDB_URL: str
 
     model_config = SettingsConfigDict(env_file=".env")

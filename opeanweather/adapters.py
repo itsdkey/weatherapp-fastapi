@@ -11,5 +11,5 @@ class OpenWeatherAdapter:
         self, city: str, country_code: str
     ) -> WeatherMeasurement:
         response = self.client.get_weather_at_location(city, country_code)
-        measurement = WeatherMeasurement(**response)
+        measurement = WeatherMeasurement(**response["main"])
         return measurement
