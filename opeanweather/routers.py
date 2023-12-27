@@ -10,7 +10,7 @@ from opeanweather.schemas import Temperature, WeatherMeasurement
 opeanweather_router = APIRouter()
 
 
-@opeanweather_router.get("/")
+@opeanweather_router.get("")
 def get_current_temperature_at_location(
     # db: Annotated[WeatherDBClient, Depends(get_db)],
     settings: Annotated[Settings, Depends(get_settings)],
@@ -21,8 +21,8 @@ def get_current_temperature_at_location(
     if city and country_code:
         adapter = OpenWeatherAdapter(settings)
         measurement = adapter.get_weather_at_location(city, country_code)
-        db = WeatherDBClient(settings)
-        db.save_weather_data(measurement, tags={"location": city})
+        with WeatherDBClient(settings) as db:
+            db.save_weather_data(measurement, tags={"location": city})
         response = measurement
     return response
 

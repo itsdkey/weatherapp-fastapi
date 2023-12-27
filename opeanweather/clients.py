@@ -42,7 +42,9 @@ class OpenWeatherClient:
 
 
 class WeatherDBClient(InfluxDBClient):
-    def save_weather_data(self, measurement: WeatherMeasurement, tags: dict = None):
+    def save_weather_data(
+        self, measurement: WeatherMeasurement, tags: dict = None
+    ) -> None:
         bucket = "weatherapp"
 
         measurement = {
