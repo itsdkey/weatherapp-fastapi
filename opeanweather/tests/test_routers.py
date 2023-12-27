@@ -244,7 +244,7 @@ def test_weather_from_third_party_is_saved_in_db(httpx_mock: HTTPXMock):
     assert response == expected_response
 
 
-def test_history_returns_weather_from_the_past(httpx_mock: HTTPXMock):
+def test_history_returns_weather_from_the_past():
     settings = get_settings_override()
     city = "Białystok"
     data = {
