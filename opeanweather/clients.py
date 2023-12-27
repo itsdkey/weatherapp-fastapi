@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import httpx
 from influxdb_client import Point
 
@@ -46,6 +48,7 @@ class WeatherDBClient(InfluxDBClient):
         measurement = {
             "measurement": WEATHER_MEASUREMENT_DOC_TYPE,
             "fields": measurement.model_dump(),
+            "time": datetime.now(),
         }
         if tags:
             measurement |= {"tags": tags}
