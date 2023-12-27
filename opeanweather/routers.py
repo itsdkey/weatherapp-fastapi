@@ -12,7 +12,6 @@ opeanweather_router = APIRouter()
 
 @opeanweather_router.get("")
 def get_current_temperature_at_location(
-    # db: Annotated[WeatherDBClient, Depends(get_db)],
     settings: Annotated[Settings, Depends(get_settings)],
     city: str,
     country_code: str,

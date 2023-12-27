@@ -1,4 +1,4 @@
-from typing import Annotated, Any, Type
+from typing import Annotated, Any
 
 import influxdb_client
 from fastapi import Depends
@@ -44,10 +44,3 @@ class InfluxDBClient:
     def _query(self, query: str, params: dict = None) -> TableList:
         query_api = self.client.query_api()
         return query_api.query(query=query, params=params)
-
-
-def get_db(
-    db_client: Type[InfluxDBClient],
-    settings: Annotated[Settings, Depends(get_settings)],
-) -> Any:
-    return db_client(settings)
