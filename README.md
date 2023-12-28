@@ -40,12 +40,12 @@ To keep following the best practices and to have my code more structured I decid
 To make this project work you first need to set up the required env vars:
 * OPENWEATHER_API_KEY
 * OPENWEATHER_DOMAIN
-* INFLUXDB_ORG=<your InfluxDB organization>
-* INFLUXDB_BUCKET=<your InfluxDB initial bucket>
+* INFLUXDB_ORG=< your InfluxDB organization >
+* INFLUXDB_BUCKET=< your InfluxDB initial bucket >
 * INFLUXDB_URL=http://influxdb:8086  (becasue we will create a connection between containers)
 * INFLUXDB_TOKEN=<your InfluxDB token that will be used for DB connection/queries)
 
-
+You can receive the openweather values from your openweather account on https://home.openweathermap.org/api_keys
 # InfluxDB setup
 To set up your InfluxDB instance (using docker compose) first you need to create a separate env file called `.infludb2.env` and fill the values for:
 DOCKER_INFLUXDB_INIT_MODE=setup
