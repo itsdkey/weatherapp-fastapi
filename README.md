@@ -85,3 +85,32 @@ environment by:
 ```shell
 pre-commit install
 ```
+
+## Testing
+Use the following command (inside the app contaienr) to execute all tests using pytest:
+```shell
+pytest
+```
+
+### Debugging
+You can debug your project using a debugger. When working with docker containers it's easier to use
+a debugger called [WDB](https://github.com/Kozea/wdb). It allows to debug your workflow at runtime
+using a web browser. You can debug tests or flows using the installed wdb debugger.
+Don't worry, the docker-compose.yml file sets the necessary environment variables:
+```shell
+PYTHONBREAKPOINT: wdb.set_trace
+WDB_SOCKET_SERVER: wdb
+WDB_NO_BROWSER_AUTO_OPEN: 1
+```
+
+### How to use it
+First, place a breakpoint:
+```python
+breakpoint()
+```
+The start the WDB container in the background:
+```shell
+docker compose up -d wdb
+```
+
+After that run your piece of code and check the statement inside the interactive console on: http://127.0.0.1:1984/
