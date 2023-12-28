@@ -1,0 +1,44 @@
+services:
+  app:
+    build: .
+    container_name: weather-app
+    command: ["local_entrypoint.sh"]
+    env_file: .env
+    environment:
+      PYTHONBREAKPOINT: wdb.set_trace
+      WDB_SOCKET_SERVER: wdb
+      WDB_NO_BROWSER_AUTO_OPEN: 1
+    depends_on:
+      - influxdb
+    ports:
+      - '8000:8000'
+    volumes:
+      - '.:/app'
+
+  influxdb:
+    container_name: db
+    image: influxdb:2.7-alpine
+    env_file: .influxv2.env
+    ports:
+      - "8086:8086"
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - influxdbv2:/var/lib/influxdb2:rw
+
+  telegraf:
+    image: telegraf:1.25-alpine
+    env_file: .influxv2.env
+    depends_on:
+      - influxdb
+    volumes:
+      # Mount for telegraf config
+      - ./telegraf/mytelegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+  wdb:
+    image: 'kozea/wdb:3.3.0'
+    container_name: wdb
+    ports:
+      - '1984:1984'
+
+volumes:
+  influxdbv2:
