@@ -17,7 +17,7 @@ services:
 
   influxdb:
     container_name: db
-    image: influxdb:2.6-alpine
+    image: influxdb:2.7-alpine
     env_file: .influxv2.env
     ports:
       - "8086:8086"

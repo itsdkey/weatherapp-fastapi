@@ -10,10 +10,11 @@ from pytest_httpx import HTTPXMock
 from app.config import Settings, get_settings
 from app.main import app
 from opeanweather.clients import WeatherDBClient
+from opeanweather.enums import WeatherMeasurementName
 from opeanweather.schemas import (
     WEATHER_MEASUREMENT_DOC_TYPE,
-    Temperature,
-    WeatherMeasurement,
+    WeatherMeasurementsRead,
+    WeatherMeasurementsWrite,
 )
 
 client = TestClient(app)
@@ -226,10 +227,9 @@ def test_weather_from_third_party_is_saved_in_db(httpx_mock: HTTPXMock):
     )
     frozen_time = datetime.now(tz=tzlocal())
     expected_response = [
-        Temperature(
-            type="weather_measurement:temperature",
-            temp=openweather_response["main"]["temp"],
+        WeatherMeasurementsRead(
             time=frozen_time,
+            **openweather_response["main"],
         ),
     ]
 
@@ -240,7 +240,7 @@ def test_weather_from_third_party_is_saved_in_db(httpx_mock: HTTPXMock):
         )
 
     with WeatherDBClient(settings) as db:
-        response = db.get_weather_measurements(location=city)
+        response = db.get_weather_measurements(location=city.lower())
     assert response == expected_response
 
 
@@ -256,16 +256,54 @@ def test_history_returns_weather_from_the_past():
         "humidity": 93,
     }
     with WeatherDBClient(settings) as db:
-        db.save_weather_data(WeatherMeasurement(**data), tags={"location": city})
+        db.save_weather_data(
+            WeatherMeasurementsWrite(**data), tags={"location": city.lower()}
+        )
     expected_response = [
-        {
-            "temp": data["temp"],
+        data
+        | {
             "time": ANY,
-            "type": f"{WEATHER_MEASUREMENT_DOC_TYPE}:temperature",
+            "type": f"{WEATHER_MEASUREMENT_DOC_TYPE}",
         },
     ]
 
     response = client.get("/weather/history", params={"city": city})
+
+    assert response.status_code == 200
+    assert response.json() == expected_response
+
+
+def test_history_for_one_measurement_returns_weather_from_the_past():
+    settings = get_settings_override()
+    city = "Białystok"
+    data = {
+        "temp": 273.91,
+        "feels_like": 271.3,
+        "temp_min": 272.6,
+        "temp_max": 274.61,
+        "pressure": 998,
+        "humidity": 93,
+    }
+    with WeatherDBClient(settings) as db:
+        db.save_weather_data(
+            WeatherMeasurementsWrite(**data), tags={"location": city.lower()}
+        )
+    expected_response = [
+        {
+            "value": data[str(WeatherMeasurementName.FEELS_LIKE)],
+            "time": ANY,
+            "type": ":".join(
+                [
+                    WEATHER_MEASUREMENT_DOC_TYPE,
+                    WeatherMeasurementName.FEELS_LIKE,
+                ]
+            ),
+        },
+    ]
+
+    response = client.get(
+        f"/weather/history/{WeatherMeasurementName.FEELS_LIKE}", params={"city": city}
+    )
 
     assert response.status_code == 200
     assert response.json() == expected_response

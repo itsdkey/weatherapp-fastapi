@@ -5,7 +5,7 @@ from pydantic import BaseModel
 WEATHER_MEASUREMENT_DOC_TYPE = "weather_measurement"
 
 
-class WeatherMeasurement(BaseModel):
+class WeatherMeasurementsWrite(BaseModel):
     temp: float
     feels_like: float
     temp_min: float
@@ -14,7 +14,12 @@ class WeatherMeasurement(BaseModel):
     humidity: int
 
 
-class Temperature(BaseModel):
-    type: str = "weather_measurement:temperature"
-    temp: float
+class WeatherMeasurementsRead(WeatherMeasurementsWrite):
+    type: str = WEATHER_MEASUREMENT_DOC_TYPE
+    time: datetime
+
+
+class WeatherMeasurement(BaseModel):
+    type: str
+    value: float | int
     time: datetime

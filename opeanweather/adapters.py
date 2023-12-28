@@ -1,6 +1,6 @@
 from app.config import Settings
 from opeanweather.clients import OpenWeatherClient
-from opeanweather.schemas import WeatherMeasurement
+from opeanweather.schemas import WeatherMeasurementsWrite
 
 
 class OpenWeatherAdapter:
@@ -9,7 +9,7 @@ class OpenWeatherAdapter:
 
     def get_weather_at_location(
         self, city: str, country_code: str
-    ) -> WeatherMeasurement:
+    ) -> WeatherMeasurementsWrite:
         response = self.client.get_weather_at_location(city, country_code)
-        measurement = WeatherMeasurement(**response["main"])
+        measurement = WeatherMeasurementsWrite(**response["main"])
         return measurement
